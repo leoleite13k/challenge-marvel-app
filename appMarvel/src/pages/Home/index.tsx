@@ -1,129 +1,199 @@
 import React, { useState, useEffect } from 'react';
-import IoniconsIcon from 'react-native-vector-icons/Ionicons';
+import { RefreshControl, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import api from '../../services/api';
+import { IResponseData, IResult } from '../../models/comic';
+import Search from '../../components/Search';
+import Title from '../../components/Title';
+import Loader from '../../components/Loader';
 
-import Search from './Search';
+import Favorite from './Favorite';
+import Comic from './Comic';
 
 import {
   Container,
-  Title,
-  FavoriteList,
-  FavoriteContainer,
-  FavoriteButton,
+  ComicHeader,
   ComicList,
-  ComicContainer,
-  Portatil,
-  Thumbnail,
-  ComicTitle,
-  ComicInfo,
-  ComicName,
+  FavoriteList,
+  ContentFooterLoader,
 } from './styles';
 
-export interface ICreator {
-  name: string;
-  role: string;
-}
-
-export interface IResult {
-  id: number;
-  title: string;
-  thumbnail: {
-    path: string;
-    extension: string;
-  };
-  creators: {
-    items: ICreator[];
-  };
-}
-
-interface IComic {
-  offset: number;
-  limit: number;
-  total: number;
-  count: number;
-  results: IResult[];
-}
-
 const Home: React.FC = () => {
-  const [comics, setComics] = useState<IComic | null>(null);
+  const [data, setData] = useState<IResponseData | undefined>(undefined);
   const [favorites, setFavorites] = useState<IResult[]>([]);
+  const [searchIds, setSearchIds] = useState<number[]>([]);
+  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  useEffect(() => {
-    async function getData() {
-      const { data } = await api.get('/comics?limit=10&orderBy=title');
+  const navigation = useNavigation();
 
-      setComics(data.data);
-      setLoading(false);
+  function FooterLoader() {
+    if (loading) {
+      return <Loader />;
     }
 
-    getData();
-  }, []);
+    if (
+      (!loading && data && data?.results.length < 10) ||
+      data?.results.length === data?.total ||
+      refreshing
+    )
+      return null;
 
-  function handleFavorite(id: number) {
+    return (
+      <ContentFooterLoader>
+        <ActivityIndicator size="small" color="#ccc" />
+      </ContentFooterLoader>
+    );
+  }
+
+  function isFavorite(id: number): boolean {
     const findIndex = favorites.findIndex(favorite => favorite.id === id);
 
-    if (findIndex >= 0) {
-      setFavorites(favorites.filter(favorite => favorite.id !== id));
+    return findIndex >= 0;
+  }
+
+  function handleFavorite(id: number) {
+    if (isFavorite(id)) {
+      const newFavorites = favorites.filter(favorite => favorite.id !== id);
+
+      setFavorites(newFavorites);
       return;
     }
 
-    const newFavorite = comics?.results.find(comic => comic.id === id);
+    const newFavorite = data?.results.find(comic => comic.id === id);
 
     if (newFavorite) {
       setFavorites(oldFavorites => [...oldFavorites, newFavorite]);
     }
   }
 
+  function handleOpenComic(comic: IResult, openFavorite = false) {
+    navigation.navigate('Comic', { comic, isFavorite: openFavorite });
+  }
+
+  async function loadComics(limit: number, ids: number[] = []) {
+    const newLimit = limit * 10;
+
+    const { data: response } = await api.get(
+      `/comics?format=comic&limit=${newLimit}&orderBy=title${
+        ids.length > 0 ? `&characters=${ids}` : ''
+      }`,
+    );
+
+    setData(response?.data);
+    setRefreshing(false);
+  }
+
+  async function loadMoreComics() {
+    const newPage = page + 1;
+
+    await loadComics(newPage, searchIds);
+    setPage(newPage);
+  }
+
+  async function handleSearch(text: string) {
+    if (text) {
+      setLoading(true);
+
+      const { data: responseChar } = await api.get(
+        `/characters?nameStartsWith=${text}`,
+      );
+
+      const ids = responseChar?.data.results
+        .slice(0, 10)
+        .map((char: { id: number }) => char.id);
+
+      await loadComics(1, ids);
+      setSearchIds(ids);
+      return;
+    }
+
+    await loadComics(1);
+    setSearchIds([]);
+  }
+
+  async function loadFavorites() {
+    const savedFavorites = await AsyncStorage.getItem('@appMarvel: favorites');
+
+    setFavorites(JSON.parse(savedFavorites || '[]'));
+  }
+
+  useEffect(() => {
+    async function getData() {
+      await Promise.all([loadComics(1), loadFavorites()]);
+
+      setLoading(false);
+    }
+
+    getData();
+  }, []);
+
+  useEffect(() => {
+    async function updatefavorites() {
+      await AsyncStorage.setItem(
+        '@appMarvel: favorites',
+        JSON.stringify(favorites),
+      );
+    }
+
+    updatefavorites();
+  }, [favorites]);
+
   return (
     <Container>
-      <Search />
+      <Search placeholder="Character" onChangeText={handleSearch} />
 
-      <Title>Favorites</Title>
-      <FavoriteList>
-        {favorites.map(({ id, thumbnail }) => (
-          <FavoriteContainer key={id}>
-            {/* <FavoriteButton onPress={() => handleFavorite(id)}>
-              <IoniconsIcon name="ios-star-sharp" size={18} color="#f00" />
-            </FavoriteButton> */}
-            <Thumbnail
-              source={{
-                uri: `https://${
-                  thumbnail.path.split('http://')[1]
-                }/portrait_xlarge.${thumbnail.extension}`,
-              }}
-            />
-          </FavoriteContainer>
-        ))}
-      </FavoriteList>
-
-      <Title>Comics</Title>
       <ComicList
-        data={comics?.results}
         keyExtractor={({ id }) => String(id)}
-        renderItem={({ item }) => (
-          <ComicContainer>
-            {/* <FavoriteButton onPress={() => handleFavorite(item.id)}>
-              <IoniconsIcon name="ios-star-sharp" size={18} color="#f00" />
-            </FavoriteButton> */}
-            <Portatil>
-              <Thumbnail
-                source={{
-                  uri: `https://${item.thumbnail.path.split('http://')[1]}.${
-                    item.thumbnail.extension
-                  }`,
-                }}
-              />
-            </Portatil>
-
-            <ComicInfo>
-              <ComicTitle>{item.title}</ComicTitle>
-              {item?.creators?.items.map(({ name, role }) => (
-                <>{role === 'writer' && <ComicName>{name}</ComicName>}</>
+        data={data?.results}
+        nestedScrollEnabled
+        onEndReached={loadMoreComics}
+        onEndReachedThreshold={0.1}
+        scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+              loadComics(10, searchIds);
+            }}
+            title="refreshing..."
+            titleColor="#ccc"
+            tintColor="#ccc"
+          />
+        }
+        ListHeaderComponent={() => (
+          <ComicHeader>
+            <Title>Favorites</Title>
+            <FavoriteList>
+              {favorites.map(favorite => (
+                <Favorite
+                  key={`${favorite.id}-favorite`}
+                  data={favorite}
+                  handleOpenComic={() => handleOpenComic(favorite, true)}
+                  handleRemoveFavorite={handleFavorite}
+                />
               ))}
-            </ComicInfo>
-          </ComicContainer>
+            </FavoriteList>
+
+            <Title>Comics</Title>
+          </ComicHeader>
+        )}
+        ListFooterComponent={FooterLoader}
+        renderItem={({ item }) => (
+          <>
+            {!loading ? (
+              <Comic
+                data={item}
+                isFavorite={isFavorite}
+                handleOpenComic={() => handleOpenComic(item)}
+                handleFavorite={handleFavorite}
+              />
+            ) : null}
+          </>
         )}
       />
     </Container>
