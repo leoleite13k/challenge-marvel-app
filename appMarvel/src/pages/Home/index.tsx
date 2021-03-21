@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshControl, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
 
-import api from '../../services/api';
-import { IResponseData, IResult } from '../../models/comic';
+import { useComic } from '../../hooks/comic';
+
 import Search from '../../components/Search';
 import Title from '../../components/Title';
 import Loader from '../../components/Loader';
@@ -21,18 +19,22 @@ import {
 } from './styles';
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<IResponseData | undefined>(undefined);
-  const [favorites, setFavorites] = useState<IResult[]>([]);
   const [searchIds, setSearchIds] = useState<number[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const navigation = useNavigation();
+  const {
+    data,
+    favorites,
+    loading,
+    searchComic,
+    searchCharacterByName,
+    loadFavorites,
+  } = useComic();
 
   function FooterLoader() {
     if (loading) {
-      return <Loader />;
+      return <Loader marginTop="50%" />;
     }
 
     if (
@@ -49,98 +51,37 @@ const Home: React.FC = () => {
     );
   }
 
-  function isFavorite(id: number): boolean {
-    const findIndex = favorites.findIndex(favorite => favorite.id === id);
+  const loadMoreComics = async () => {
+    const limit = page + 1;
 
-    return findIndex >= 0;
-  }
+    await searchComic({ limit, ids: searchIds });
+    setPage(limit);
+  };
 
-  function handleFavorite(id: number) {
-    if (isFavorite(id)) {
-      const newFavorites = favorites.filter(favorite => favorite.id !== id);
+  const handleSearch = async (name: string) => {
+    if (name) {
+      const resultsCharacter = await searchCharacterByName({ name });
 
-      setFavorites(newFavorites);
-      return;
-    }
-
-    const newFavorite = data?.results.find(comic => comic.id === id);
-
-    if (newFavorite) {
-      setFavorites(oldFavorites => [...oldFavorites, newFavorite]);
-    }
-  }
-
-  function handleOpenComic(comic: IResult, openFavorite = false) {
-    navigation.navigate('Comic', { comic, isFavorite: openFavorite });
-  }
-
-  async function loadComics(limit: number, ids: number[] = []) {
-    const newLimit = limit * 10;
-
-    const { data: response } = await api.get(
-      `/comics?format=comic&limit=${newLimit}&orderBy=title${
-        ids.length > 0 ? `&characters=${ids}` : ''
-      }`,
-    );
-
-    setData(response?.data);
-    setRefreshing(false);
-  }
-
-  async function loadMoreComics() {
-    const newPage = page + 1;
-
-    await loadComics(newPage, searchIds);
-    setPage(newPage);
-  }
-
-  async function handleSearch(text: string) {
-    if (text) {
-      setLoading(true);
-
-      const { data: responseChar } = await api.get(
-        `/characters?nameStartsWith=${text}`,
-      );
-
-      const ids = responseChar?.data.results
+      const ids = resultsCharacter
         .slice(0, 10)
         .map((char: { id: number }) => char.id);
 
-      await loadComics(1, ids);
+      await searchComic({ limit: 1, ids });
       setSearchIds(ids);
       return;
     }
 
-    await loadComics(1);
+    await searchComic({ limit: 1 });
     setSearchIds([]);
-  }
-
-  async function loadFavorites() {
-    const savedFavorites = await AsyncStorage.getItem('@appMarvel: favorites');
-
-    setFavorites(JSON.parse(savedFavorites || '[]'));
-  }
+  };
 
   useEffect(() => {
     async function getData() {
-      await Promise.all([loadComics(1), loadFavorites()]);
-
-      setLoading(false);
+      await Promise.all([searchComic({ limit: 1 }), loadFavorites()]);
     }
 
     getData();
-  }, []);
-
-  useEffect(() => {
-    async function updatefavorites() {
-      await AsyncStorage.setItem(
-        '@appMarvel: favorites',
-        JSON.stringify(favorites),
-      );
-    }
-
-    updatefavorites();
-  }, [favorites]);
+  }, [loadFavorites, searchComic]);
 
   return (
     <Container>
@@ -169,13 +110,8 @@ const Home: React.FC = () => {
           <ComicHeader>
             <Title>Favorites</Title>
             <FavoriteList>
-              {favorites.map(favorite => (
-                <Favorite
-                  key={`${favorite.id}-favorite`}
-                  data={favorite}
-                  handleOpenComic={() => handleOpenComic(favorite, true)}
-                  handleRemoveFavorite={handleFavorite}
-                />
+              {favorites.map(item => (
+                <Favorite key={item.id} data={item} />
               ))}
             </FavoriteList>
 
@@ -184,16 +120,7 @@ const Home: React.FC = () => {
         )}
         ListFooterComponent={FooterLoader}
         renderItem={({ item }) => (
-          <>
-            {!loading ? (
-              <Comic
-                data={item}
-                isFavorite={isFavorite}
-                handleOpenComic={() => handleOpenComic(item)}
-                handleFavorite={handleFavorite}
-              />
-            ) : null}
-          </>
+          <>{!loading ? <Comic data={item} /> : null}</>
         )}
       />
     </Container>

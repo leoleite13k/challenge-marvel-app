@@ -1,25 +1,27 @@
 import React from 'react';
 import { SharedElement } from 'react-navigation-shared-element';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
+import { useComic } from '../../../hooks/comic';
 import { IResult } from '../../../models/comic';
 
 import { Container, RemoveButton, Thumbnail } from './styles';
 
 interface IFavorite {
   data: IResult;
-  handleOpenComic(id: number): void;
-  handleRemoveFavorite(id: number): void;
 }
 
-const Favorite: React.FC<IFavorite> = ({
-  data,
-  handleOpenComic,
-  handleRemoveFavorite,
-}) => {
+const Favorite: React.FC<IFavorite> = ({ data }) => {
+  const navigation = useNavigation();
+  const { handleFavorite } = useComic();
+
   return (
-    <Container onPress={() => handleOpenComic(data.id)}>
-      <RemoveButton onPress={() => handleRemoveFavorite(data.id)}>
+    <Container
+      onPress={() =>
+        navigation.navigate('Detail', { comic: data, isFavorite: true })}
+    >
+      <RemoveButton onPress={() => handleFavorite({ id: data.id })}>
         <IoniconsIcon name="close" size={22} color="#fff" />
       </RemoveButton>
       <SharedElement id={`${data?.id}-favorite`}>

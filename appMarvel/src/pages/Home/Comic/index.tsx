@@ -1,8 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
+import { useNavigation } from '@react-navigation/native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 
+import { useComic } from '../../../hooks/comic';
 import { IResult } from '../../../models/comic';
 
 import {
@@ -17,19 +19,19 @@ import {
 
 interface IComic {
   data: IResult;
-  isFavorite(id: number): boolean;
-  handleOpenComic(id: number): void;
-  handleFavorite(id: number): void;
 }
 
-const Comic: React.FC<IComic> = ({
-  data,
-  isFavorite,
-  handleOpenComic,
-  handleFavorite,
-}) => {
+const Comic: React.FC<IComic> = ({ data }) => {
+  const navigation = useNavigation();
+
+  const { isFavorite, handleFavorite } = useComic();
+
   return (
-    <Container key={data?.id} onPress={() => handleOpenComic(data.id)}>
+    <Container
+      key={data?.id}
+      onPress={() =>
+        navigation.navigate('Detail', { comic: data, isFavorite: false })}
+    >
       <Portatil>
         <SharedElement id={`${data?.id}-bg`}>
           <Thumbnail
@@ -40,11 +42,11 @@ const Comic: React.FC<IComic> = ({
             }}
           />
         </SharedElement>
-        <FavoriteButton onPress={() => handleFavorite(data.id)}>
+        <FavoriteButton onPress={() => handleFavorite({ id: data.id })}>
           <AntDesignIcon
-            name={isFavorite(data.id) ? 'heart' : 'hearto'}
+            name={isFavorite({ id: data.id }) ? 'heart' : 'hearto'}
             size={18}
-            color={isFavorite(data.id) ? '#f00' : '#fff'}
+            color={isFavorite({ id: data.id }) ? '#f00' : '#fff'}
           />
         </FavoriteButton>
       </Portatil>

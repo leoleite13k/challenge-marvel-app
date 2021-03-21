@@ -1,9 +1,11 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+import { ILoader } from './index';
+
+export const Container = styled.View<ILoader>`
   flex: 1;
   align-items: center;
   justify-content: center;
 
-  margin-top: 50%;
+  margin-top: ${({ marginTop }) => marginTop || '0px'};
 `;

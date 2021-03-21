@@ -3,9 +3,13 @@ import { ActivityIndicator } from 'react-native';
 
 import { Container } from './styles';
 
-const Loader: React.FC = () => {
+export interface ILoader {
+  marginTop?: string;
+}
+
+const Loader: React.FC<ILoader> = ({ marginTop }) => {
   return (
-    <Container>
+    <Container marginTop={marginTop}>
       <ActivityIndicator size="large" color="#ccc" />
     </Container>
   );
