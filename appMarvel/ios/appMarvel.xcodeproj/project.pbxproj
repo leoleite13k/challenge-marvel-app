@@ -17,6 +17,7 @@
 		B4EF84CF1925495DB99C696D /* RobotoCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 15929C8332FC4894843E0C65 /* RobotoCondensed-Regular.ttf */; };
 		C7D14E5FE35E5A95F3466622 /* libPods-appMarvel-appMarvelTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 280CC2ADB2FBED7A4082A0D9 /* libPods-appMarvel-appMarvelTests.a */; };
 		E10A0CD912FE43EA9D2D26ED /* RobotoCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28C338C1C834432C81CAF249 /* RobotoCondensed-Bold.ttf */; };
+		F86275DF2607BEFB005DC399 /* appMarvel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86275DE2607BEFB005DC399 /* appMarvel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,8 @@
 		D5D6B0FBABF34A3A902CD51B /* RobotoCondensed-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoCondensed-Light.ttf"; path = "../assets/fonts/RobotoCondensed-Light.ttf"; sourceTree = "<group>"; };
 		DAB6D6DBBC8E4317A95E11E6 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F86275DD2607BEFA005DC399 /* appMarvel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "appMarvel-Bridging-Header.h"; sourceTree = "<group>"; };
+		F86275DE2607BEFB005DC399 /* appMarvel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = appMarvel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +152,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				F86275DE2607BEFB005DC399 /* appMarvel.swift */,
 				13B07FAE1A68108700A75B9A /* appMarvel */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* appMarvelTests */,
@@ -156,6 +160,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				6382A700BD3BAA10135D7970 /* Pods */,
 				FAE1E7BC8627460E8829DD59 /* Resources */,
+				F86275DD2607BEFA005DC399 /* appMarvel-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -256,7 +261,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -464,6 +469,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				F86275DF2607BEFB005DC399 /* appMarvel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,6 +488,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 200FB2B5CB00AF027C38BBBA /* Pods-appMarvel-appMarvelTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = BKTQ46R429;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -510,6 +517,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 586834515FAB80A060E39E5A /* Pods-appMarvel-appMarvelTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = BKTQ46R429;
@@ -552,6 +560,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = appMarvel;
+				SWIFT_OBJC_BRIDGING_HEADER = "appMarvel-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -578,6 +587,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = appMarvel;
+				SWIFT_OBJC_BRIDGING_HEADER = "appMarvel-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

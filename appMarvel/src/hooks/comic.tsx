@@ -30,8 +30,6 @@ interface IFavorite {
 interface ComicContextData {
   data: IResponseData;
   favorites: IResult[];
-  loading: boolean;
-  loadingDetail: boolean;
   isFavorite(props: IFavorite): boolean;
   handleFavorite(props: IFavorite): void;
   loadFavorites(): Promise<void>;
@@ -44,7 +42,6 @@ const ComicContext = createContext<ComicContextData>({} as ComicContextData);
 const ComicProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<IResponseData>({} as IResponseData);
   const [favorites, setFavorites] = useState<IResult[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
   const isFavorite = useCallback(
     ({ id }): boolean => {
@@ -80,7 +77,6 @@ const ComicProvider: React.FC = ({ children }) => {
   }, []);
 
   const searchComic = useCallback(async ({ limit, ids = [] }) => {
-    setLoading(true);
     const newLimit = limit * 10;
 
     const { data: response } = await api.get(
@@ -90,7 +86,6 @@ const ComicProvider: React.FC = ({ children }) => {
     );
 
     setData(response?.data);
-    setLoading(false);
   }, []);
 
   const searchCharacterByName = useCallback(async ({ name }): Promise<
@@ -119,14 +114,12 @@ const ComicProvider: React.FC = ({ children }) => {
       value={{
         data,
         favorites,
-        loading,
         isFavorite,
         handleFavorite,
         loadFavorites,
         searchComic,
         searchCharacterByName,
-      }}
-    >
+      }}>
       {children}
     </ComicContext.Provider>
   );

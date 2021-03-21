@@ -1,7 +1,7 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import Lottie from 'lottie-react-native';
 
-import { Container } from './styles';
+import { Container, Wrapper } from './styles';
 
 export interface ILoader {
   marginTop?: string;
@@ -10,7 +10,13 @@ export interface ILoader {
 const Loader: React.FC<ILoader> = ({ marginTop }) => {
   return (
     <Container marginTop={marginTop}>
-      <ActivityIndicator size="large" color="#ccc" />
+      <Wrapper>
+        <Lottie
+          source={require('../../../assets/lotties/loader.json')}
+          autoPlay
+          loop
+        />
+      </Wrapper>
     </Container>
   );
 };

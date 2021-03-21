@@ -41,5 +41,5 @@ export const FavoriteList = styled.ScrollView.attrs({
 export const ContentFooterLoader = styled.View`
   align-items: center;
   justify-content: center;
-  height: 20px;
+  height: 40px;
 `;

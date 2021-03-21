@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshControl, ActivityIndicator } from 'react-native';
+import { RefreshControl } from 'react-native';
+import Lottie from 'lottie-react-native';
 
 import { useComic } from '../../hooks/comic';
 
@@ -22,11 +23,12 @@ const Home: React.FC = () => {
   const [searchIds, setSearchIds] = useState<number[]>([]);
   const [page, setPage] = useState<number>(1);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
 
   const {
     data,
     favorites,
-    loading,
     searchComic,
     searchCharacterByName,
     loadFavorites,
@@ -34,31 +36,41 @@ const Home: React.FC = () => {
 
   function FooterLoader() {
     if (loading) {
-      return <Loader marginTop="50%" />;
+      return <Loader marginTop="40%" />;
     }
 
-    if (
-      (!loading && data && data?.results.length < 10) ||
-      data?.results.length === data?.total ||
-      refreshing
-    )
-      return null;
+    if (loadingMore && !loading) {
+      return (
+        <ContentFooterLoader>
+          <Lottie
+            source={require('../../../assets/lotties/loader.json')}
+            autoPlay
+            loop
+          />
+        </ContentFooterLoader>
+      );
+    }
 
-    return (
-      <ContentFooterLoader>
-        <ActivityIndicator size="small" color="#ccc" />
-      </ContentFooterLoader>
-    );
+    return null;
   }
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await searchComic({ limit: 10, ids: searchIds });
+    setRefreshing(false);
+  };
+
   const loadMoreComics = async () => {
+    setLoadingMore(true);
     const limit = page + 1;
 
     await searchComic({ limit, ids: searchIds });
     setPage(limit);
+    setLoadingMore(false);
   };
 
   const handleSearch = async (name: string) => {
+    setLoading(true);
     if (name) {
       const resultsCharacter = await searchCharacterByName({ name });
 
@@ -68,16 +80,19 @@ const Home: React.FC = () => {
 
       await searchComic({ limit: 1, ids });
       setSearchIds(ids);
+      setLoading(false);
       return;
     }
 
     await searchComic({ limit: 1 });
     setSearchIds([]);
+    setLoading(false);
   };
 
   useEffect(() => {
     async function getData() {
       await Promise.all([searchComic({ limit: 1 }), loadFavorites()]);
+      setLoading(false);
     }
 
     getData();
@@ -94,18 +109,15 @@ const Home: React.FC = () => {
         onEndReached={loadMoreComics}
         onEndReachedThreshold={0.1}
         scrollEventThrottle={16}
-        refreshControl={
+        refreshControl={(
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={() => {
-              setRefreshing(true);
-              loadComics(10, searchIds);
-            }}
+            onRefresh={handleRefresh}
             title="refreshing..."
             titleColor="#ccc"
             tintColor="#ccc"
           />
-        }
+        )}
         ListHeaderComponent={() => (
           <ComicHeader>
             <Title>Favorites</Title>
