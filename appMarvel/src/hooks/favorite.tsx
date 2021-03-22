@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import { Alert } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { IResult } from '../models/comic';
 import { useComic } from './comic';
@@ -84,22 +84,18 @@ const FavoriteProvider: React.FC = ({ children }) => {
   );
 
   const handleClearAll = useCallback(() => {
-    Alert.alert(
-      "Remove all",
-      "Do you want to remove all favorites?",
-      [
-        {
-          text: "Cancel",
-          onPress: () => {},
-          style: "cancel",
-        },
-        {
-          text: "Ok",
-          onPress: () => setData([]),
-          style: "ok",
-        },
-      ],
-      )
+    Alert.alert('Remove all', 'Do you want to remove all favorites?', [
+      {
+        text: 'Cancel',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Ok',
+        onPress: () => setData([]),
+        style: 'ok',
+      },
+    ]);
   }, []);
 
   const handleSort = useCallback(
@@ -139,8 +135,7 @@ const FavoriteProvider: React.FC = ({ children }) => {
         handleClearAll,
         handleSort,
         loadFavorites,
-      }}
-    >
+      }}>
       {children}
     </FavoriteContext.Provider>
   );
