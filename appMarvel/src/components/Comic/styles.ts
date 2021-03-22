@@ -62,6 +62,10 @@ export const Title = styled.Text.attrs({
   color: #f4f4f4;
 `;
 
+export const ContentWriter = styled.View`
+  flex: 1;
+`;
+
 export const Writer = styled.Text.attrs({
   numberOfLines: 1,
 })`
@@ -69,4 +73,27 @@ export const Writer = styled.Text.attrs({
   font-size: 14px;
   color: #caa96d;
   margin-top: 6px;
+`;
+
+export const Row = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+export const TitleDate = styled.Text.attrs({
+  numberOfLines: 1,
+})`
+  font-family: 'RobotoCondensed-Bold';
+  font-size: 14px;
+  color: #f4f4f4;
+  margin-right: 4px;
+`;
+
+export const Date = styled.Text.attrs({
+  numberOfLines: 1,
+})`
+  font-family: 'RobotoCondensed-Regular';
+  font-size: 14px;
+  color: #f00;
 `;

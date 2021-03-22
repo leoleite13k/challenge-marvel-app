@@ -1,40 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshControl } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
 
 import { useComic } from '../../hooks/comic';
+import { useFavorite } from '../../hooks/favorite';
 
-import Search from '../../components/Search';
 import Title from '../../components/Title';
 import Loader from '../../components/Loader';
+import Comic from '../../components/Comic';
 
 import Favorite from './Favorite';
-import Comic from './Comic';
+import Filter from './Filter';
 
 import {
   Container,
   ComicHeader,
-  ComicList,
+  Row,
+  SeeAllButton,
+  Text,
   FavoriteList,
+  ComicList,
   ContentFooterLoader,
 } from './styles';
 
 const Home: React.FC = () => {
-  const [searchIds, setSearchIds] = useState<number[]>([]);
   const [page, setPage] = useState<number>(1);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
 
-  const {
-    data,
-    favorites,
-    searchComic,
-    searchCharacterByName,
-    loadFavorites,
-  } = useComic();
+  const { data, loading, setLoading, characterFilter, search } = useComic();
+  const { data: dataFavorite, loadFavorites } = useFavorite();
+  const navigation = useNavigation();
 
-  function FooterLoader() {
+  const FooterLoader = () => {
     if (loading) {
       return <Loader marginTop="40%" />;
     }
@@ -52,55 +51,44 @@ const Home: React.FC = () => {
     }
 
     return null;
-  }
+  };
+
+  const handleSeeAllFavorite = () => {
+    navigation.navigate('Favorite');
+  };
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await searchComic({ limit: 10, ids: searchIds });
+    await search({ limit: 10, character: characterFilter });
     setRefreshing(false);
   };
 
   const loadMoreComics = async () => {
-    setLoadingMore(true);
-    const limit = page + 1;
+    if (data.results.length < data.total) {
+      setLoadingMore(true);
+      const limit = page + 1;
 
-    await searchComic({ limit, ids: searchIds });
-    setPage(limit);
-    setLoadingMore(false);
-  };
-
-  const handleSearch = async (name: string) => {
-    setLoading(true);
-    if (name) {
-      const resultsCharacter = await searchCharacterByName({ name });
-
-      const ids = resultsCharacter
-        .slice(0, 10)
-        .map((char: { id: number }) => char.id);
-
-      await searchComic({ limit: 1, ids });
-      setSearchIds(ids);
-      setLoading(false);
-      return;
+      await search({ limit, character: characterFilter });
+      setPage(limit);
+      setLoadingMore(false);
     }
-
-    await searchComic({ limit: 1 });
-    setSearchIds([]);
-    setLoading(false);
   };
 
   useEffect(() => {
     async function getData() {
-      await Promise.all([searchComic({ limit: 1 }), loadFavorites()]);
+      await Promise.all([
+        search({ limit: 1, character: null }),
+        loadFavorites(),
+      ]);
       setLoading(false);
     }
 
     getData();
-  }, [loadFavorites, searchComic]);
+  }, [loadFavorites, search, setLoading]);
 
   return (
     <Container>
-      <Search placeholder="Character" onChangeText={handleSearch} />
+      <Filter />
 
       <ComicList
         keyExtractor={({ id }) => String(id)}
@@ -120,14 +108,21 @@ const Home: React.FC = () => {
         )}
         ListHeaderComponent={() => (
           <ComicHeader>
-            <Title>Favorites</Title>
+            <Row>
+              <Title>Favorites</Title>
+              <SeeAllButton onPress={handleSeeAllFavorite}>
+                <Text>See all</Text>
+              </SeeAllButton>
+            </Row>
             <FavoriteList>
-              {favorites.map(item => (
-                <Favorite key={item.id} data={item} />
+              {dataFavorite.map(favorite => (
+                <Favorite key={favorite.id} data={favorite} />
               ))}
             </FavoriteList>
 
-            <Title>Comics</Title>
+            <Row>
+              <Title>Comics</Title>
+            </Row>
           </ComicHeader>
         )}
         ListFooterComponent={FooterLoader}

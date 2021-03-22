@@ -1,19 +1,22 @@
 import React, { useEffect } from 'react';
 import { Linking, View } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { format } from 'date-fns';
 import { SharedElement } from 'react-navigation-shared-element';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 
 import { useDetail } from '../../hooks/detail';
 import { IResult } from '../../models/comic';
+import { formatDate, removeHTML } from '../../utils/format';
 import Title from '../../components/Title';
 import Loader from '../../components/Loader';
+import FavoriteButton from '../../components/FavoriteButton';
 
 import {
   Container,
   Banner,
+  Row,
   BackButton,
+  ContentFavorite,
   Content,
   ContentInfo,
   Footer,
@@ -27,7 +30,6 @@ import {
   Text,
   Writer,
 } from './styles';
-import { removeHTML } from '../../utils/format';
 
 type ParamDetail = {
   Detail: {
@@ -72,12 +74,18 @@ const Detail: React.FC = () => {
           <BackButton onPress={() => navigation.goBack()}>
             <AntDesignIcon name="arrowleft" size={20} color="#fff" />
           </BackButton>
+
+          <ContentFavorite>
+            <FavoriteButton data={comic} />
+          </ContentFavorite>
         </Banner>
       </SharedElement>
 
-      <SharedElement id={`${comic?.id}.title`}>
-        <Title>{comic?.title}</Title>
-      </SharedElement>
+      <Row>
+        <SharedElement id={`${comic?.id}.title`}>
+          <Title>{comic?.title}</Title>
+        </SharedElement>
+      </Row>
 
       <ContentInfo>
         <View>
@@ -86,7 +94,7 @@ const Detail: React.FC = () => {
             <View key={`${data.id}-${type}-${date}`}>
               {type === 'onsaleDate' && (
                 <Text color="#f00">
-                  {format(new Date(date), 'MMMM dd, yyyy')}
+                  {formatDate(new Date(date), 'MMMM dd, yyyy')}
                 </Text>
               )}
             </View>

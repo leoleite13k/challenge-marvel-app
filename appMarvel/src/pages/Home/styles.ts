@@ -10,19 +10,26 @@ export const ComicHeader = styled.View`
   margin-bottom: 16px;
 `;
 
-export const Title = styled.Text`
-  font-family: 'RobotoCondensed-Bold';
-  font-size: 22px;
-  font-weight: 500;
-  color: #f4f4f4;
+export const Row = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 
-  margin-top: 26px;
-  margin-bottom: 16px;
-  margin-left: 14px;
+  padding: 26px 14px 16px 14px;
+`;
+
+export const SeeAllButton = styled.TouchableOpacity``;
+
+export const Text = styled.Text`
+  font-family: 'RobotoCondensed-Regular';
+  font-size: 14px;
+  color: #f4f4f4;
 `;
 
 export const ComicList = styled(FlatList as new () => FlatList<IResult>).attrs({
-  showsVerticalScrollIndicator: false,
+  scrollIndicatorInsets: {
+    top: 330,
+  },
 })``;
 
 export const FavoriteList = styled.ScrollView.attrs({

@@ -14,11 +14,23 @@ export const Banner = styled.ImageBackground`
   height: 200px;
 `;
 
+export const Row = styled.View`
+  flex-direction: row;
+
+  padding: 26px 14px 16px 14px;
+`;
+
 export const BackButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,
 })`
   margin-top: ${getStatusBarHeight() + 16}px;
   margin-left: 14px;
+`;
+
+export const ContentFavorite = styled.View`
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
 `;
 
 export const ContentInfo = styled.View`

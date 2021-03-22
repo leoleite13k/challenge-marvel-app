@@ -2,6 +2,7 @@ import React from 'react';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 
 import Home from '../pages/Home';
+import Favorite from '../pages/Favorite';
 import Detail from '../pages/Detail';
 
 const App = createSharedElementStackNavigator();
@@ -12,9 +13,9 @@ const Routes: React.FC = () => (
       headerShown: false,
       cardStyle: { backgroundColor: '#323232' },
     }}
-    initialRouteName="Home"
-  >
+    initialRouteName="Home">
     <App.Screen name="Home" component={Home} />
+    <App.Screen name="Favorite" component={Favorite} />
     <App.Screen
       name="Detail"
       component={Detail}

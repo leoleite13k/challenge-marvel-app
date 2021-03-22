@@ -1,124 +1,67 @@
-import React, {
-  createContext,
-  useCallback,
-  useState,
-  useContext,
-  useEffect,
-} from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
+import React, { createContext, useCallback, useState, useContext } from 'react';
 
 import api from '../services/api';
-import { IResponseData, IResult } from '../models/comic';
+import { IResponseData } from '../models/comic';
+import { ICharacter } from '../models/character';
 
-interface ISearchCharacterByName {
-  name: string;
+interface ISearchByChar {
+  char: string;
 }
 
-interface ISearchComicById {
-  id: number;
-}
-
-interface ISearchComic {
+interface ISearch {
   limit: number;
-  ids?: number[];
-}
-
-interface IFavorite {
-  id: number;
+  character?: ICharacter | null;
 }
 
 interface ComicContextData {
   data: IResponseData;
-  favorites: IResult[];
-  isFavorite(props: IFavorite): boolean;
-  handleFavorite(props: IFavorite): void;
-  loadFavorites(): Promise<void>;
-  searchComic(filters: ISearchComic): Promise<void>;
-  searchCharacterByName(filters: ISearchCharacterByName): Promise<IResult[]>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  characterFilter: ICharacter | null;
+  setCharacterFilter: React.Dispatch<React.SetStateAction<ICharacter | null>>;
+  search(filters: ISearch): Promise<void>;
+  searchByChar(filters: ISearchByChar): Promise<ICharacter[]>;
 }
 
 const ComicContext = createContext<ComicContextData>({} as ComicContextData);
 
 const ComicProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<IResponseData>({} as IResponseData);
-  const [favorites, setFavorites] = useState<IResult[]>([]);
-
-  const isFavorite = useCallback(
-    ({ id }): boolean => {
-      const findIndex = favorites.findIndex(favorite => favorite.id === id);
-
-      return findIndex >= 0;
-    },
-    [favorites],
+  const [loading, setLoading] = useState<boolean>(true);
+  const [characterFilter, setCharacterFilter] = useState<ICharacter | null>(
+    null,
   );
 
-  const handleFavorite = useCallback(
-    ({ id }) => {
-      if (isFavorite({ id })) {
-        const newFavorites = favorites.filter(favorite => favorite.id !== id);
-
-        setFavorites(newFavorites);
-        return;
-      }
-
-      const newFavorite = data.results.find(item => item.id === id);
-
-      if (newFavorite) {
-        setFavorites(oldFavorites => [...oldFavorites, newFavorite]);
-      }
-    },
-    [data.results, favorites, isFavorite],
-  );
-
-  const loadFavorites = useCallback(async () => {
-    const savedFavorites = await AsyncStorage.getItem('@appMarvel: favorites');
-
-    setFavorites(JSON.parse(savedFavorites || '[]'));
-  }, []);
-
-  const searchComic = useCallback(async ({ limit, ids = [] }) => {
+  const search = useCallback(async ({ limit, character = null }) => {
     const newLimit = limit * 10;
 
     const { data: response } = await api.get(
       `/comics?format=comic&limit=${newLimit}&orderBy=title${
-        ids.length > 0 ? `&characters=${ids}` : ''
+        character ? `&characters=${character.id}` : ''
       }`,
     );
 
     setData(response?.data);
   }, []);
 
-  const searchCharacterByName = useCallback(async ({ name }): Promise<
-    IResult[]
-  > => {
+  const searchByChar = useCallback(async ({ char }): Promise<ICharacter[]> => {
     const { data: responseChar } = await api.get(
-      `/characters?nameStartsWith=${name}`,
+      `/characters?limit=100&nameStartsWith=${char}`,
     );
 
     return responseChar.data.results;
   }, []);
 
-  useEffect(() => {
-    async function updatefavorites(): Promise<void> {
-      await AsyncStorage.setItem(
-        '@appMarvel: favorites',
-        JSON.stringify(favorites),
-      );
-    }
-
-    updatefavorites();
-  }, [favorites]);
-
   return (
     <ComicContext.Provider
       value={{
         data,
-        favorites,
-        isFavorite,
-        handleFavorite,
-        loadFavorites,
-        searchComic,
-        searchCharacterByName,
+        loading,
+        setLoading,
+        characterFilter,
+        setCharacterFilter,
+        search,
+        searchByChar,
       }}>
       {children}
     </ComicContext.Provider>

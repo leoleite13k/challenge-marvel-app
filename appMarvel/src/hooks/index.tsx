@@ -2,12 +2,15 @@
 import React from 'react';
 
 import { ComicProvider } from './comic';
+import { FavoriteProvider } from './favorite';
 import { DetailProvider } from './detail';
 
 const AppProvider: React.FC = ({ children }) => {
   return (
     <ComicProvider>
-      <DetailProvider>{children}</DetailProvider>
+      <FavoriteProvider>
+        <DetailProvider>{children}</DetailProvider>
+      </FavoriteProvider>
     </ComicProvider>
   );
 };

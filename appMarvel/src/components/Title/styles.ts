@@ -1,10 +1,9 @@
 import styled from 'styled-components/native';
 
-export const Text = styled.Text`
+import { ITitle } from './index';
+
+export const Text = styled.Text<ITitle>`
   font-family: 'RobotoCondensed-Bold';
   font-size: 22px;
-  color: #f4f4f4;
-
-  margin-top: 26px;
-  margin-left: 14px;
+  color: ${({ color }) => color || '#f4f4f4'};
 `;

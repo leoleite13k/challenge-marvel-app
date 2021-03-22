@@ -33,6 +33,7 @@ export interface IResult {
   dates: IDate[];
   prices: IPrice[];
   urls: IUrl[];
+  dateFavorite?: number;
 }
 
 export interface IResponseData {

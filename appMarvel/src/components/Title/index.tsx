@@ -2,8 +2,12 @@ import React from 'react';
 
 import { Text } from './styles';
 
-const Title: React.FC = ({ children }) => {
-  return <Text>{children}</Text>;
+export interface ITitle {
+  color?: string;
+}
+
+const Title: React.FC<ITitle> = ({ color, children }) => {
+  return <Text color={color}>{children}</Text>;
 };
 
 export default Title;
