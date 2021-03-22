@@ -5,7 +5,6 @@ export const Input = styled.TextInput.attrs({
   autoCorrect: false,
 })`
   flex: 1;
-  height: 36px;
 
   font-size: 18px;
   color: #f4f4f4;

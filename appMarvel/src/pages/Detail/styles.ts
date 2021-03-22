@@ -122,7 +122,7 @@ export const Text = styled(TextTitle).attrs({
 `;
 
 export const Writer = styled(Text).attrs({
-  numberOfLines: 2,
+  numberOfLines: 1,
 })`
   font-size: 14px;
   color: #caa96d;

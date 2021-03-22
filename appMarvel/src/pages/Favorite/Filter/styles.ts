@@ -36,7 +36,24 @@ export const Text = styled.Text`
 
 export const TextFilter = styled(Text)`
   font-family: 'RobotoCondensed-Bold';
+  color: #f4f4f4;
+  text-transform: capitalize;
   margin-left: 4px;
+`;
+
+export const ButtonClear = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.6,
+})`
+  height: 28px;
+  margin-right: 16px;
+
+  align-items: center;
+  justify-content: center;
+`;
+
+export const TextClear = styled.Text`
+  font-family: 'RobotoCondensed-Regular';
+  font-size: 14px;
   color: #f4f4f4;
 `;
 

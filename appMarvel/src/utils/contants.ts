@@ -25,3 +25,16 @@ export const LETTERS = [
   'Y',
   'Z',
 ];
+
+export const ORDERBY = [
+  {
+    id: 1,
+    title: 'date',
+    field: 'dateFavorite',
+  },
+  {
+    id: 2,
+    title: 'title',
+    field: 'title',
+  },
+];

@@ -92,10 +92,8 @@ const Detail: React.FC = () => {
           <TextTitle>Published</TextTitle>
           {data?.dates.map(({ type, date }) => (
             <View key={`${data.id}-${type}-${date}`}>
-              {type === 'onsaleDate' && (
-                <Text color="#f00">
-                  {formatDate(new Date(date), 'MMMM dd, yyyy')}
-                </Text>
+              {date && type === 'onsaleDate' && (
+                <Text color="#f00">{formatDate(date)}</Text>
               )}
             </View>
           ))}
@@ -144,7 +142,7 @@ const Detail: React.FC = () => {
                 <TextTitle>Penciler</TextTitle>
                 {data?.creators.items.map(({ name, role }) => (
                   <View key={`${data.id}-${name}-${role}`}>
-                    {role === 'writer' && <Text>{name}</Text>}
+                    {role === 'penciller' && <Text>{name}</Text>}
                   </View>
                 ))}
               </Column>
@@ -152,7 +150,7 @@ const Detail: React.FC = () => {
                 <TextTitle>Cover Artist</TextTitle>
                 {data?.creators.items.map(({ name, role }) => (
                   <View key={`${data.id}-${name}-${role}`}>
-                    {role === 'writer' && <Text>{name}</Text>}
+                    {role === 'artist' && <Text>{name}</Text>}
                   </View>
                 ))}
               </Column>

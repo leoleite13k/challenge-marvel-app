@@ -9,15 +9,8 @@ export const Button = styled.TouchableOpacity.attrs({
 })`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   padding: 8px 0px;
-`;
-
-export const Thumbnail = styled.ImageBackground`
-  height: 60px;
-  width: 60px;
-  margin-right: 6px;
-  border-radius: 6px;
-  overflow: hidden;
 `;
 
 export const Text = styled.Text.attrs({
@@ -25,6 +18,7 @@ export const Text = styled.Text.attrs({
 })`
   font-family: 'RobotoCondensed-Bold';
   font-size: 18px;
+  text-transform: capitalize;
   margin-left: 4px;
   color: #f4f4f4;
 `;

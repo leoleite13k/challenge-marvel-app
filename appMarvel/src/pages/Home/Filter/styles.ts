@@ -65,7 +65,7 @@ export const Button = styled.TouchableOpacity.attrs({
 export const HeaderModal = styled.View`
   justify-content: center;
   height: 60px;
-  padding: 12px;
+  padding: 0px 12px;
 
   border-bottom-width: 1px;
   border-bottom-color: #ccc;

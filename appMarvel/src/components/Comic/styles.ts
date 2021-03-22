@@ -16,35 +16,13 @@ export const Portatil = styled.View`
   flex: 1;
   max-width: 90px;
   margin-right: 12px;
+  border-radius: 6px;
+  overflow: hidden;
 `;
 
 export const Thumbnail = styled.ImageBackground`
   height: 100%;
   width: 100%;
-  border-radius: 6px;
-`;
-
-export const FavoriteButton = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.6,
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 2,
-  },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  elevation: 5,
-  hitSlop: {
-    top: 20,
-    bottom: 20,
-    left: 20,
-    right: 20,
-  },
-})`
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  z-index: 2;
 `;
 
 export const Info = styled.View`
@@ -85,7 +63,7 @@ export const TitleDate = styled.Text.attrs({
   numberOfLines: 1,
 })`
   font-family: 'RobotoCondensed-Bold';
-  font-size: 14px;
+  font-size: 15px;
   color: #f4f4f4;
   margin-right: 4px;
 `;

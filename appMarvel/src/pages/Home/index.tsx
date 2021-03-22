@@ -64,7 +64,7 @@ const Home: React.FC = () => {
   };
 
   const loadMoreComics = async () => {
-    if (data.results.length < data.total) {
+    if (data.results.length < data.total && data.total > 0) {
       setLoadingMore(true);
       const limit = page + 1;
 
@@ -97,7 +97,7 @@ const Home: React.FC = () => {
         onEndReached={loadMoreComics}
         onEndReachedThreshold={0.1}
         scrollEventThrottle={16}
-        refreshControl={(
+        refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
@@ -105,7 +105,7 @@ const Home: React.FC = () => {
             titleColor="#ccc"
             tintColor="#ccc"
           />
-        )}
+        }
         ListHeaderComponent={() => (
           <ComicHeader>
             <Row>

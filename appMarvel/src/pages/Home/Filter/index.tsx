@@ -43,7 +43,7 @@ const Filter: React.FC = () => {
   const handleFilterCharacter = (text: string) => {
     if (text) {
       const newCharacters = characters.filter(
-        item => item.name.indexOf(text) > -1,
+        item => item.name.toLowerCase().indexOf(text.toLowerCase()) > -1,
       );
       setCharactersFiltered(newCharacters);
       return;
@@ -84,7 +84,8 @@ const Filter: React.FC = () => {
             )}
             <Button
               onPress={handleFilterLetter}
-              style={{ transform: [{ rotate: '-90deg' }] }}>
+              style={{ transform: [{ rotate: '-90deg' }] }}
+            >
               <IoniconsIcon name="options" color="#fff" size={24} />
             </Button>
           </Row>
@@ -107,7 +108,8 @@ const Filter: React.FC = () => {
               />
             )}
           </HeaderModal>
-        )}>
+        )}
+      >
         <Modal
           refModalize={refModalize}
           char={char}
