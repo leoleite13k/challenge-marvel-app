@@ -7,6 +7,7 @@ import { Container, Button, Thumbnail, Text } from './styles';
 import { ICharacter } from '../../../../models/character';
 import { LETTERS } from '../../../../utils/contants';
 import Loader from '../../../../components/Loader';
+import api from '../../../../services/api';
 
 interface IModal {
   refModalize: React.RefObject<IHandles>;
@@ -25,13 +26,15 @@ const Modal: React.FC<IModal> = ({
 }) => {
   const [loadingCharacter, setLoadingCharacter] = useState<boolean>(false);
 
-  const { searchByChar, search, setCharacterFilter, setLoading } = useComic();
+  const { search, setCharacterFilter, setLoading } = useComic();
 
   const handleSelectChar = async (letter: string) => {
     setChar(letter);
     setLoadingCharacter(true);
-    const dataCharacters = await searchByChar({ char: letter });
-    setCharacters(dataCharacters);
+    const { data: responseChar } = await api.get(
+      `/characters?limit=100&orderBy=name&nameStartsWith=${letter}`,
+    );
+    setCharacters(responseChar.data.results);
     setLoadingCharacter(false);
   };
 
@@ -63,8 +66,7 @@ const Modal: React.FC<IModal> = ({
               {characters.map(character => (
                 <Button
                   key={character.id}
-                  onPress={() => handleSelectCharacter(character)}
-                >
+                  onPress={() => handleSelectCharacter(character)}>
                   <Thumbnail
                     source={{
                       uri: `https://${

@@ -29,10 +29,11 @@ const Comic: React.FC<IComic> = ({ data }) => {
 
   return (
     <Container
+      testID="comic_button"
       key={data?.id}
       onPress={() =>
-        navigation.navigate('Detail', { comic: data, isFavorite: false })}
-    >
+        navigation.navigate('Detail', { comic: data, isFavorite: false })
+      }>
       <Portatil>
         <SharedElement id={`${data?.id}-bg`}>
           <Thumbnail

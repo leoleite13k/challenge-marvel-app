@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import React from 'react';
 import Lottie from 'lottie-react-native';
 
@@ -9,7 +10,7 @@ export interface ILoader {
 
 const Loader: React.FC<ILoader> = ({ marginTop }) => {
   return (
-    <Container marginTop={marginTop}>
+    <Container testID="loader" marginTop={marginTop}>
       <Wrapper>
         <Lottie
           source={require('../../../assets/lotties/loader.json')}

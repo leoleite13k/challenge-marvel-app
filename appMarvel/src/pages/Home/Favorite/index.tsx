@@ -18,10 +18,13 @@ const Favorite: React.FC<IFavorite> = ({ data }) => {
 
   return (
     <Container
+      testID="favorite_detail_button"
       onPress={() =>
-        navigation.navigate('Detail', { comic: data, isFavorite: true })
-      }>
-      <RemoveButton onPress={() => handleFavorite({ id: data.id })}>
+        navigation.navigate('Detail', { comic: data, isFavorite: true })}
+    >
+      <RemoveButton
+        testID="remove_favorite_button"
+        onPress={() => handleFavorite({ id: data.id })}>
         <IoniconsIcon name="close" size={22} color="#fff" />
       </RemoveButton>
       <SharedElement id={`${data?.id}-favorite`}>

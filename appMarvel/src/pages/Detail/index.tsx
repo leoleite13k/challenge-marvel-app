@@ -67,11 +67,11 @@ const Detail: React.FC = () => {
       >
         <Banner
           source={{
-            uri: `https://${comic.thumbnail.path.split('http://')[1]}.${
-              comic.thumbnail.extension
+            uri: `https://${comic?.thumbnail?.path.split('http://')[1]}.${
+              comic?.thumbnail?.extension
             }`,
           }}>
-          <BackButton onPress={() => navigation.goBack()}>
+          <BackButton testID="back_button" onPress={() => navigation.goBack()}>
             <AntDesignIcon name="arrowleft" size={20} color="#fff" />
           </BackButton>
 
@@ -122,6 +122,7 @@ const Detail: React.FC = () => {
                 </View>
               ))}
               <ButtonBuy
+                testID="buy_button"
                 onPress={handleBuy}
                 disabled={!data?.urls.find(url => url.type === 'purchase')}>
                 <TextBuy>Buy</TextBuy>

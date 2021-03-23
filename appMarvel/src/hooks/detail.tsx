@@ -34,8 +34,7 @@ const DetailProvider: React.FC = ({ children }) => {
         loading,
         searchById,
         setData,
-      }}
-    >
+      }}>
       {children}
     </DetailContext.Provider>
   );
@@ -43,10 +42,6 @@ const DetailProvider: React.FC = ({ children }) => {
 
 function useDetail(): DetailContextData {
   const context = useContext(DetailContext);
-
-  if (!context) {
-    throw new Error('useDetail must be used within an DetailProvider');
-  }
 
   return context;
 }

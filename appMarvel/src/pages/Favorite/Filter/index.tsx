@@ -36,7 +36,9 @@ const Filter: React.FC = () => {
       <Container>
         <Content>
           <Row>
-            <BackButton onPress={() => navigation.goBack()}>
+            <BackButton
+              testID="filter_back_button"
+              onPress={() => navigation.goBack()}>
               <AntDesignIcon name="arrowleft" size={20} color="#fff" />
             </BackButton>
             <Text>Orde by: </Text>
@@ -71,7 +73,8 @@ const Filter: React.FC = () => {
           <HeaderModal>
             <Title>Order by</Title>
           </HeaderModal>
-        )}>
+        )}
+      >
         <Modal refModalize={refModalize} />
       </Modalize>
     </>

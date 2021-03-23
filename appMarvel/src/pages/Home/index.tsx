@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+/* eslint-disable react/jsx-wrap-multilines */
 import React, { useState, useEffect } from 'react';
 import { RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -91,6 +93,7 @@ const Home: React.FC = () => {
       <Filter />
 
       <ComicList
+        testID="comic_list"
         keyExtractor={({ id }) => String(id)}
         data={data?.results}
         nestedScrollEnabled
@@ -110,7 +113,10 @@ const Home: React.FC = () => {
           <ComicHeader>
             <Row>
               <Title>Favorites</Title>
-              <SeeAllButton onPress={handleSeeAllFavorite}>
+              <SeeAllButton
+                testID="see_all_button"
+                onPress={handleSeeAllFavorite}
+              >
                 <Text>See all</Text>
               </SeeAllButton>
             </Row>

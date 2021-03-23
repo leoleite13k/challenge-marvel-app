@@ -1,4 +1,5 @@
-import { format, parse } from 'date-fns';
+/* eslint-disable @typescript-eslint/ban-types */
+import { format } from 'date-fns';
 
 export const removeHTML = (message: string | undefined): string | undefined => {
   const regex = /(<([^>]+)>)/gi;
@@ -32,4 +33,16 @@ export const formatDate = (date: string | number): string => {
   }
 
   return format(date, 'MMMM dd, yyyy');
+};
+
+export const sortByField = (a: object, b: object, field: string) => {
+  if (a[field] < b[field]) {
+    return -1;
+  }
+
+  if (a[field] > b[field]) {
+    return 1;
+  }
+
+  return 0;
 };

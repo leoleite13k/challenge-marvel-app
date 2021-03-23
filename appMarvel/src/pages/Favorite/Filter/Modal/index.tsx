@@ -22,7 +22,10 @@ const Modal: React.FC<IModal> = ({ refModalize }) => {
   return (
     <Container>
       {ORDERBY.map(({ id, title, field }) => (
-        <Button key={id} onPress={() => handleOrder(field)}>
+        <Button
+          testID="order_button"
+          key={id}
+          onPress={() => handleOrder(field)}>
           <Text>{title}</Text>
           {order === field && (
             <AntDesignIcon name="check" size={20} color="#caa96d" />
