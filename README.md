@@ -5,9 +5,9 @@
 
 <strong>Para que seja possível rodar o projeto é necessário seguir os passos abaixo  🚀</strong>
 
-1.  Clonar o repositório.
-2. Ir até o diretório a onde clonou o repositório e na raiz criar um arquivo com o nome .env
-3. Dentro deste arquivo é necessário definir as váriaveis e tokens no mesmo padrão que existem em .env.example com a sua informações da conta na MARVEL.
+1. Clonar o repositório.
+2. Ir até o diretório a onde clonou o repositório entrar na pasta raiz */appMarvel* e criar um arquivo com o nome **.env**
+3. Dentro deste arquivo é necessário definir as váriaveis e tokens no mesmo padrão que existem em .env.example com a sua informações da conta na **MARVEL**.
 4. Certifique-se de ter todo o ambiente de desenvolvimento instalado (yarn, emulador iOS/Android e tudo mais...), caso necessário segue o link para configuração do ambiente de desenvolvimento: <a style="color:#7e46c3; font-weight:500">https://react-native.rocketseat.dev/</a>
 4. Após todo o processo rode os seguintes comandos:
 
