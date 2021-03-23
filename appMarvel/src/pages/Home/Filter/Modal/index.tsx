@@ -29,13 +29,17 @@ const Modal: React.FC<IModal> = ({
   const { search, setCharacterFilter, setLoading } = useComic();
 
   const handleSelectChar = async (letter: string) => {
-    setChar(letter);
-    setLoadingCharacter(true);
-    const { data: responseChar } = await api.get(
-      `/characters?limit=100&orderBy=name&nameStartsWith=${letter}`,
-    );
-    setCharacters(responseChar.data.results);
-    setLoadingCharacter(false);
+    try {
+      setChar(letter);
+      setLoadingCharacter(true);
+      const { data: responseChar } = await api.get(
+        `/characters?limit=100&orderBy=name&nameStartsWith=${letter}`,
+      );
+      setCharacters(responseChar.data.results);
+      setLoadingCharacter(false);
+    } catch (error) {
+      setLoadingCharacter(false);
+    }
   };
 
   const handleSelectCharacter = async (character: ICharacter) => {
@@ -66,7 +70,8 @@ const Modal: React.FC<IModal> = ({
               {characters.map(character => (
                 <Button
                   key={character.id}
-                  onPress={() => handleSelectCharacter(character)}>
+                  onPress={() => handleSelectCharacter(character)}
+                >
                   <Thumbnail
                     source={{
                       uri: `https://${

@@ -193,4 +193,27 @@ describe('Comic hook', () => {
 
     expect(result.current.data).toEqual(response.data);
   });
+
+  it('should not be able search comics', async () => {
+    const response = {
+      code: 409,
+      status: 'You must pass an integer limit greater than 0.',
+    };
+
+    apiMock
+      .onGet('/comics?format=comic&limit=invalid-limit&orderBy=title')
+      .reply(409, response);
+
+    const { result, waitForNextUpdate } = renderHook(() => useComic(), {
+      wrapper: ComicProvider,
+    });
+
+    result.current.search({
+      limit: 'invalid-limit',
+    });
+
+    await waitForNextUpdate();
+
+    expect(result.current.loading).toBeFalsy();
+  });
 });

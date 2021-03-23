@@ -192,4 +192,25 @@ describe('Comic hook', () => {
     expect(result.current.data).toEqual(response.data.results[0]);
     expect(result.current.loading).toBeFalsy();
   });
+
+  it('should not be able search comic by id', async () => {
+    const response = {
+      code: 404,
+      status: "We couldn't find that comic_issue",
+    };
+
+    apiMock.onGet('/comics/invalid-id').reply(404, response);
+
+    const { result, waitForNextUpdate } = renderHook(() => useDetail(), {
+      wrapper: DetailProvider,
+    });
+
+    result.current.searchById({
+      id: 'invalid-id',
+    });
+
+    await waitForNextUpdate();
+
+    expect(result.current.loading).toBeFalsy();
+  });
 });

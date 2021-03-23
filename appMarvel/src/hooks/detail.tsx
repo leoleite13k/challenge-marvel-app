@@ -21,10 +21,14 @@ const DetailProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const searchById = useCallback(async ({ id }) => {
-    setLoading(true);
-    const { data: response } = await api.get(`/comics/${id}`);
-    setData(response.data.results[0]);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data: response } = await api.get(`/comics/${id}`);
+      setData(response.data.results[0]);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   }, []);
 
   return (
@@ -34,7 +38,8 @@ const DetailProvider: React.FC = ({ children }) => {
         loading,
         searchById,
         setData,
-      }}>
+      }}
+    >
       {children}
     </DetailContext.Provider>
   );

@@ -28,15 +28,19 @@ const ComicProvider: React.FC = ({ children }) => {
   );
 
   const search = useCallback(async ({ limit, character = null }) => {
-    const newLimit = limit * 10;
+    try {
+      const newLimit = limit * 10;
 
-    const { data: response } = await api.get(
-      `/comics?format=comic&limit=${newLimit}&orderBy=title${
-        character ? `&characters=${character.id}` : ''
-      }`,
-    );
+      const { data: response } = await api.get(
+        `/comics?format=comic&limit=${newLimit}&orderBy=title${
+          character ? `&characters=${character.id}` : ''
+        }`,
+      );
 
-    setData(response?.data);
+      setData(response?.data);
+    } catch (error) {
+      setLoading(false);
+    }
   }, []);
 
   return (
@@ -48,7 +52,8 @@ const ComicProvider: React.FC = ({ children }) => {
         characterFilter,
         setCharacterFilter,
         search,
-      }}>
+      }}
+    >
       {children}
     </ComicContext.Provider>
   );
