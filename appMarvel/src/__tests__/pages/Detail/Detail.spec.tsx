@@ -10,7 +10,7 @@ const comic: IResult = {
   pageCount: 233,
   urls: [
     {
-      type: 'detail',
+      type: 'purchase',
       url:
         'http://marvel.com/comics/issue/82967/marvel_previews_2017?utm_campaign=apiRef&utm_source=10bab138cb8384426205710437215153',
     },
@@ -47,6 +47,7 @@ const comic: IResult = {
 
 const mockedOpenUrl = jest.fn();
 const mockedHistoryGoBack = jest.fn();
+const mockedDetDate = jest.fn();
 
 jest.mock('@react-navigation/native', () => {
   return {
@@ -68,9 +69,9 @@ jest.mock('../../../hooks/detail', () => {
   return {
     useDetail: () => ({
       data: comic,
-      loading: true,
+      loading: false,
       searchById: jest.fn(),
-      setData: jest.fn(),
+      setData: mockedDetDate,
     }),
   };
 });
@@ -84,6 +85,16 @@ jest.mock('../../../hooks/favorite', () => {
 });
 
 describe('Detail page', () => {
+  it('should be able buy a comic', async () => {
+    const { getByTestId } = render(<Detail />);
+
+    const buyButton = getByTestId('buy_button');
+
+    fireEvent.press(buyButton);
+
+    expect(mockedOpenUrl).toBeCalled();
+  });
+
   it('should be able go back page', () => {
     const { getByTestId } = render(<Detail />);
 
@@ -92,5 +103,13 @@ describe('Detail page', () => {
     fireEvent.press(backButton);
 
     expect(mockedHistoryGoBack).toBeCalled();
+  });
+
+  it('should be unmount page', () => {
+    const { unmount } = render(<Detail />);
+
+    unmount();
+
+    expect(mockedDetDate).toBeCalled();
   });
 });

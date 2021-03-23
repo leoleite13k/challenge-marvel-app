@@ -5,8 +5,8 @@ import InputSearch from '../../components/InputSearch';
 
 const mockedOnChangeText = jest.fn();
 
-describe('Comic page', () => {
-  it('should be able see a comic details', () => {
+describe('InputSearch component', () => {
+  it('should be able search in a list', () => {
     const { getByTestId } = render(
       <InputSearch onChangeText={mockedOnChangeText} />,
     );

@@ -83,7 +83,7 @@ describe('Home/Favorite page', () => {
     );
   });
 
-  it('should be able see a comic details', () => {
+  it('should be able remove a fovorite comic', () => {
     const { getByTestId } = render(<Favorite data={comic} />);
 
     const removeFavoriteButton = getByTestId('remove_favorite_button');

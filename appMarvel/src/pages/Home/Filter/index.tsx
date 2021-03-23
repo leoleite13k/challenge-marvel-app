@@ -78,14 +78,13 @@ const Filter: React.FC = () => {
 
           <Row>
             {characterFilter && (
-              <ButtonClear onPress={handleClear}>
+              <ButtonClear testID="filter_button_clear" onPress={handleClear}>
                 <TextClear>Clear</TextClear>
               </ButtonClear>
             )}
             <Button
               onPress={handleFilterLetter}
-              style={{ transform: [{ rotate: '-90deg' }] }}
-            >
+              style={{ transform: [{ rotate: '-90deg' }] }}>
               <IoniconsIcon name="options" color="#fff" size={24} />
             </Button>
           </Row>
@@ -108,8 +107,7 @@ const Filter: React.FC = () => {
               />
             )}
           </HeaderModal>
-        )}
-      >
+        )}>
         <Modal
           refModalize={refModalize}
           char={char}

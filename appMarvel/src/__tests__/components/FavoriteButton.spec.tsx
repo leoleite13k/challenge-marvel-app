@@ -57,8 +57,8 @@ jest.mock('../../hooks/favorite', () => {
   };
 });
 
-describe('Comic page', () => {
-  it('should be able see a comic details', () => {
+describe('FavoriteButton component', () => {
+  it('should be able like a comic', () => {
     const { getByTestId } = render(<FavoriteButton data={comic} />);
 
     const favoriteButton = getByTestId('favorite_button');

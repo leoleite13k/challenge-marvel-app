@@ -70,7 +70,7 @@ jest.mock('../../hooks/favorite', () => {
   };
 });
 
-describe('Comic page', () => {
+describe('Comic component', () => {
   it('should be able see a comic details', () => {
     const { getByTestId } = render(<Comic data={comic} />);
 
@@ -78,6 +78,9 @@ describe('Comic page', () => {
 
     fireEvent.press(comicButton);
 
-    expect(mockedHistoryNavigate).toHaveBeenCalledWith('Detail', mockedRouteParams);
+    expect(mockedHistoryNavigate).toHaveBeenCalledWith(
+      'Detail',
+      mockedRouteParams,
+    );
   });
 });
