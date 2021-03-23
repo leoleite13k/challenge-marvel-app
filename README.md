@@ -3,7 +3,7 @@
 <img src="https://i.ibb.co/wd9nhhp/icon.png" alt="icon" border="0" height="200px"></a>
 
 
-<strong style="color:red">Para que seja possível rodar o projeto é necessário seguir os passos abaixo 🚀</strong>
+<strong>Para que seja possível rodar o projeto é necessário seguir os passos abaixo  🚀</strong>
 
 1.  Clonar o repositório.
 2. Ir até o diretório a onde clonou o repositório e na raiz criar um arquivo com o nome .env
